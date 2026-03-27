@@ -8,6 +8,7 @@
 [![React](https://img.shields.io/badge/React-19.x-61DAFB?style=for-the-badge&logo=react)](https://reactjs.org/)
 [![Gemini AI](https://img.shields.io/badge/Gemini_1.5_Pro-Multimodal-4285F4?style=for-the-badge&logo=google)](https://ai.google.dev/)
 [![GPT-4](https://img.shields.io/badge/GPT--4_Turbo-Transcript_AI-74AA9C?style=for-the-badge&logo=openai)](https://openai.com/)
+[![Whisper](https://img.shields.io/badge/Whisper--1-Audio_Transcription-412991?style=for-the-badge&logo=openai)](https://openai.com/research/whisper)
 [![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
 
 > **LectureLens AI** is a full-stack, multimodal AI web application that captures live lectures, auto-transcribes speech in real time, and generates structured smart notes — powered by Google Gemini 1.5 Pro and GPT-4 Turbo.
@@ -26,6 +27,7 @@ Most note-taking apps just record. **LectureLens AI** *understands*.
 | Transcription | ❌ Manual | ✅ Real-time Web Speech API |
 | AI Summarization | ❌ | ✅ GPT-4 Turbo |
 | **Video-to-Notes (AI Vision)** | ❌ | ✅ **Gemini 1.5 Pro Multimodal** |
+| **Audio Transcription (Whisper)** | ❌ | ✅ **OpenAI Whisper-1 (segment timestamps)** |
 | Q&A Extraction | ❌ | ✅ Automatic |
 | Action Item Detection | ❌ | ✅ Extracted from lecture |
 | Export (PDF/Markdown) | ❌ | ✅ One-click |
@@ -96,7 +98,8 @@ Most note-taking apps just record. **LectureLens AI** *understands*.
 ### 🤖 Dual AI Analysis (The Real Magic)
 - **Path A — Gemini 1.5 Pro (Video Vision)**: Sends the raw video to Google's multimodal model. It *watches* the video and generates transcript + notes directly from visual context.
 - **Path B — GPT-4 Turbo (Transcript Analysis)**: Takes the speech transcript, sends it to OpenAI for structured extraction.
-- Both paths return: **Summary**, **Key Points**, **Topics**, **Q&A Pairs**, and **Action Items**.
+- **Path C — OpenAI Whisper-1 (Audio Transcription)**: When uploaded audio/video needs accurate transcription, the audio file is sent to Whisper-1 (`whisper-1` model, `verbose_json` format). Returns full text + segment-level timestamps for precise navigation.
+- All paths return: **Summary**, **Key Points**, **Topics**, **Q&A Pairs**, and **Action Items**.
 
 ### 📚 Smart Lecture Library
 - Grid view of all saved lectures with thumbnail metadata
@@ -144,8 +147,8 @@ lecture-capture/
 │       │   └── route.ts
 │       ├── analyze-transcript-gemini/# ✨ Gemini transcript analysis
 │       │   └── route.ts
-│       └── transcribe/               # 🎙️ Audio transcription endpoint
-│           └── route.ts
+│       └── transcribe/               # 🎙️ Whisper-1 audio transcription
+│           └── route.ts              #    (verbose_json + segment timestamps)
 │
 ├── public/                           # Static assets
 ├── main.tex                          # 📝 Research paper (LaTeX)
@@ -236,6 +239,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 | Language | **TypeScript 5** | Type-safe development |
 | AI Vision | **Google Gemini 1.5 Pro** | Multimodal video understanding |
 | AI Text | **GPT-4 Turbo (OpenAI)** | Transcript analysis & note generation |
+| AI Speech | **OpenAI Whisper-1** | Audio file transcription (segment timestamps) |
 | Speech | **Web Speech API** | Real-time browser transcription |
 | Recording | **MediaRecorder API + RecordRTC** | Video/audio capture |
 | Capture | **MediaDevices API** | Camera + screen access |
@@ -273,6 +277,14 @@ LectureLens AI uses a **Glassmorphism-first** design language:
 - **Input**: Plain-text transcript
 - **Output**: Structured JSON with educational analysis
 
+### OpenAI Whisper-1 (Audio Transcription Path)
+- **Model**: `whisper-1`
+- **Response Format**: `verbose_json` (full metadata)
+- **Timestamp Granularity**: `segment` (each sentence timestamped)
+- **Input**: Uploaded audio file (`.mp3`, `.mp4`, `.webm`, `.wav`, `.m4a`)
+- **Output**: Full transcript text + segments array with `start`/`end` times + total duration
+- **Max Duration**: 5 minutes per request
+
 ---
 
 ## 🗺️ Roadmap
@@ -309,23 +321,6 @@ git push origin feature/your-feature-name
 ## 📄 License
 
 This project is licensed under the **MIT License** — see [LICENSE](LICENSE) for details.
-
----
-
-## 👨‍💻 Author
-
-**Senth** — Final Year Computer Science Project
-
-- 🎓 AI-Based Live Video Lecture Capture & Smart Notes System
-- Built as an academic research project exploring multimodal AI in education
-
----
-
-## 📚 Research Paper
-
-This project is accompanied by a conference research paper (`main.tex`) documenting the system architecture, AI pipeline design, and experimental results.
-
-> *"Bridging the gap between live lectures and intelligent, searchable knowledge — powered by multimodal AI."*
 
 ---
 
