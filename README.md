@@ -231,6 +231,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ---
 
+
 ## 🛠️ Tech Stack
 
 | Layer | Technology | Purpose |
@@ -304,6 +305,9 @@ AI Live Video Lecture Capture uses a **Glassmorphism-first** design language:
 - [ ] Mobile app (React Native)
 
 ---
+
+## OUTPUT
+<img width="761" height="362" alt="Screenshot 2026-03-30 113743" src="https://github.com/user-attachments/assets/4a6e6b9e-2366-44e9-912a-69f7686a295e" />
 
 ## 🤝 Contributing
 
